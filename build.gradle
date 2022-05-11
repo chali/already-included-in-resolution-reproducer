@@ -1,0 +1,27 @@
+subprojects {
+    apply plugin: 'java-library'
+
+    configurations.all {
+        if (it.name == "api") {
+            it.withDependencies { dependencies ->
+                dependencies.add(project.dependencies.create("junit:junit:4.12"))
+            }
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    task resolveConfigurations() {
+        doLast {
+            project.configurations.each { configuration ->
+                if (configuration.isCanBeResolved()) {
+                    configuration.resolve()
+                }
+            }
+        }
+    }
+}
